@@ -31,13 +31,17 @@ def init_curses(screen):
 def main(screen):
     init_curses(screen)
 
+    #healthpack1 = HealthPack(30, "healthpack/HealthPack1")
+
+    items = "healthpack", "healthpack"  # items should be a list 
+
     game_map = Map("map_1")
     player = Player(game_map)
     game_UI = UI(player)
     wall_textures = "wall_1", "wall_2"
     sprite_textures = "dragon", "tree"
 
-    Controller(Renderer(screen, player, wall_textures, sprite_textures, game_UI)).start()
+    Controller(Renderer(screen, player, wall_textures, sprite_textures, game_UI, items)).start()
 
     curses.flushinp()
     curses.endwin()

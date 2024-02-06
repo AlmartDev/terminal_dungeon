@@ -34,9 +34,11 @@ class Renderer:
     minimap_pos = 5, 5  # minimap's lower-right corner's offset from screen's lower-right corner
     pad = 50  # How much extra space is added around the edge of the mini-map -- for large terminals this will need to be increased.
 
-    def __init__(self, screen, player, wall_textures=None, sprite_textures=None, UI=None):
+    def __init__(self, screen, player, wall_textures=None, sprite_textures=None, UI=None, items=None):
         self.screen = screen
         self.resize()
+
+        self.items = items
 
         self.UI = UI
 
@@ -68,6 +70,15 @@ class Renderer:
         self.distances = np.zeros(w)
         self.buffer = np.full((h, w), " ")
 
+    def _load_items(self, items):
+        self.item_textures = { }
+        for name in items:
+            item_sprite_lines = (SPRITE_DIR / (name + ".txt")).read_text().splitlines()
+            item_as_char_array = list(map(list, item_sprite_lines))
+            self.item_textures[name] = np.array(item_as_char_array).T
+        
+        # Do more stuff here
+            
     def _load_textures(self, wall_textures, sprite_textures):
         # Wall textures will be integer arrays, while sprite textures are character arrays.
         # This because the values in wall textures will add or subtract brightness to the current wall shading.
@@ -203,6 +214,61 @@ class Renderer:
             tex_rect = tex[tex_xs][:, tex_ys].T
             buffer[start_y:end_y, columns] = np.where(tex_rect != "0", tex_rect, buffer[start_y:end_y, columns])
 
+    def cast_items(self):
+        buffer = self.buffer
+        player = self.player
+        h = self.height 
+        w = self.width  
+        items = self.game_map.items
+        
+        for item in items:
+            # Relative position of sprite to player
+            item.relative = player.pos - item.pos
+        items.sort()
+
+        # Camera Inverse used to calculate transformed position of sprites.
+        cam_inv = np.linalg.inv(-player.cam[::-1])
+
+        for item in items:  # Draw each sprite from furthest to closest.
+            # Transformed position of sprites due to camera position
+            x, y = item.relative @ cam_inv
+
+            # if item is close to player, stop drawing it for the rest of the loop ("The player has grabbed the item")
+            if y <= .5:
+                pass 
+                #is_item_grabbed[item]
+
+            if True:    # if ! item_is_grabbed :
+                # Sprite x-position on screen
+                item_x = int(w / 2 * (1 + x / y))
+
+                item_height = int(h / y / 3)
+                item_width = int(w / y / 5)
+                if item_height == 0 or item_width == 0:  # Sprite too small.
+                    continue
+
+                jump_height = player.z * item_height
+                start_y = clamp(0, int((h - item_height) / 2 + jump_height), h)
+                end_y = clamp(0, int((h + item_height) / 2 + jump_height), h)
+
+                start_x = clamp(0, -item_width // 2 + item_x, w)
+                end_x = clamp(0, item_width // 2 + item_x, w)
+
+                columns = np.arange(start_x, end_x)
+                columns = columns[(0 <= columns) & (columns <= w) & (y <= self.distances[columns])]
+
+                tex = self.item_textures[item.tex]
+                tex_width, tex_height = tex.shape
+
+                clip_y = (item_height - h) / 2 - jump_height
+                tex_ys = np.clip((np.arange(start_y, end_y) + clip_y) * tex_height / item_height, 0, None).astype(int)
+
+                clip_x = item_x - item_width / 2
+                tex_xs = ((columns - clip_x) * tex_width / item_width).astype(int)
+
+                tex_rect = tex[tex_xs][:, tex_ys].T
+                buffer[start_y:end_y, columns] = np.where(tex_rect != "0", tex_rect, buffer[start_y:end_y, columns])
+
     def draw_minimap(self):
         x_offset, y_offset = self.minimap_pos
         width = int(self.minimap_width * self.width)
@@ -230,14 +296,12 @@ class Renderer:
         height += height % 2
         hh = height // 2  # half-height
 
-
         r = -height - y_offset
         c = -width - x_offset
 
         for lines in range(self.UI.lines):
             for char in range(len(self.UI._ui[lines])):
-                self.buffer[c + width + lines, r + height + char] = self.UI._ui[lines][char]
-            
+                self.buffer[c + width + lines, r + height + char] = self.UI._ui[lines][char] 
 
     def update(self):
         self.buffer[:, :] = " "  # Clear buffer
@@ -246,6 +310,9 @@ class Renderer:
 
         for column in range(self.width):  # Draw walls
             self.cast_ray(column)
+
+        self._load_items(self.items or [ ])
+        self.cast_items()
 
         self.cast_sprites()
 

@@ -29,15 +29,15 @@ class UI:
                 self._ui[lines] = self._ui[lines].replace("000", "00" + str(player.hp))
             else:
                 self._ui[lines] = self._ui[lines].replace("000", str(player.hp))
-                
+
             if len(str(player.ammo)) < 2:
                 self._ui[lines] = self._ui[lines].replace("11", "0" + str(player.ammo))
             else:
                 self._ui[lines] = self._ui[lines].replace("11", str(player.ammo))
 
-        self.pos = -10, -10
-        self.width = .2
-        self.height = .3
+        self.pos = 5, -105
+        self.width = .4
+        self.height = .5
 
     def update(self):
         self._ui = []
