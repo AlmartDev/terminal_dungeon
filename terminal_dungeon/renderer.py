@@ -34,9 +34,11 @@ class Renderer:
     minimap_pos = 5, 5  # minimap's lower-right corner's offset from screen's lower-right corner
     pad = 50  # How much extra space is added around the edge of the mini-map -- for large terminals this will need to be increased.
 
-    def __init__(self, screen, player, wall_textures=None, sprite_textures=None):
+    def __init__(self, screen, player, wall_textures=None, sprite_textures=None, UI=None):
         self.screen = screen
         self.resize()
+
+        self.UI = UI
 
         self.player = player
         self.game_map = player.game_map
@@ -218,6 +220,25 @@ class Renderer:
         self.buffer[r: -y_offset, c: -x_offset] = self.mini_map[y - hh: y + hh, x - hw: x + hw]
         self.buffer[r + hh, c + hw] = '@'
 
+    def draw_ui(self):        
+        x_offset, y_offset = self.UI.pos
+        width = int(self.UI.width * self.width)
+        width += width % 2
+
+        hw = width // 2
+        height = int(self.UI.height * self.height)
+        height += height % 2
+        hh = height // 2  # half-height
+
+
+        r = -height - y_offset
+        c = -width - x_offset
+
+        for lines in range(self.UI.lines):
+            for char in range(len(self.UI._ui[lines])):
+                self.buffer[c + width + lines, r + height + char] = self.UI._ui[lines][char]
+            
+
     def update(self):
         self.buffer[:, :] = " "  # Clear buffer
 
@@ -228,6 +249,10 @@ class Renderer:
 
         self.cast_sprites()
 
+        # update map
+        self.UI.update()
+
+        self.draw_ui()
         self.draw_minimap()
 
         # Push buffer to screen

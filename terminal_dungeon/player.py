@@ -33,6 +33,9 @@ class Player:
         self.game_map = game_map
         self.pos = pos
 
+        self.hp = 100 # Health points
+        self.ammo = 25 # Ammo
+
         if initial_angle == 0:
             initial_angle += 0.0001  # Nudge to avoid divide-by-zero errors
         self.cam = np.array([[1, 0], [0, self.field_of_view]]) @ rotation_matrix(initial_angle)
@@ -78,3 +81,27 @@ class Player:
 
         if self.game_map[self.pos[0], next_step[1]] == 0:
             self.pos[1] = next_step[1]
+
+    #--------------------- Game mechanics ---------------------
+    def getDamage(self, damage):
+        self.hp -= damage
+
+        if self.hp <= 0:
+            exit()  # Game over (TODO: Change this?)
+    
+    def getHeal(self, heal):
+        self.hp += heal
+
+        if self.hp > 100:
+            self.hp = 100   # Max HP is 100
+
+    def getAmmo(self, ammo):
+        self.ammo += ammo
+        if self.ammo > 50:
+            self.ammo = 50  # Max ammo is 50
+        elif self.ammo < 0:
+            self.ammo = 0
+    
+    def shoot(self):
+        self.ammo -= 1
+        # Do more here later

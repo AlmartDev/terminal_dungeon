@@ -19,6 +19,10 @@ RIGHT_2 = KeyCode(char='d')
 STRAFE_LEFT = KeyCode(char='q')
 STRAFE_RIGHT = KeyCode(char='e')
 
+# Game mechanics
+SHOOT = KeyCode(char='f')
+TAKE_DAMAGE = KeyCode(char='g')
+TAKE_HEALTH = KeyCode(char='h')
 
 class KeyDict(dict):
     """Dictionary that ignores certain movement inputs when player is jumping.
@@ -73,6 +77,18 @@ class Controller:
         if self.keys[TOGGLE_TEXTURE]:
             self.renderer.toggle_textures()
             self.keys[TOGGLE_TEXTURE] = False
+
+        # Game mechanics (Debug)
+        if self.keys[SHOOT]:
+            self.player.shoot()
+            self.keys[SHOOT] = False
+        if self.keys[TAKE_DAMAGE]:
+            self.player.getDamage(14)
+            self.keys[TAKE_DAMAGE] = False
+        if self.keys[TAKE_HEALTH]:
+            self.player.getHeal(25)
+            self.keys[TAKE_HEALTH] = False
+        
         self.movement()
 
     def pressed(self, key):

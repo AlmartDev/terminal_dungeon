@@ -19,6 +19,7 @@ from .map_loader import Map
 from .player import Player
 from .renderer import Renderer
 from .controller import Controller
+from .UI import UI
 
 def init_curses(screen):
     curses.curs_set(0)
@@ -32,10 +33,11 @@ def main(screen):
 
     game_map = Map("map_1")
     player = Player(game_map)
+    game_UI = UI(player)
     wall_textures = "wall_1", "wall_2"
     sprite_textures = "dragon", "tree"
 
-    Controller(Renderer(screen, player, wall_textures, sprite_textures)).start()
+    Controller(Renderer(screen, player, wall_textures, sprite_textures, game_UI)).start()
 
     curses.flushinp()
     curses.endwin()
