@@ -16,7 +16,10 @@ subtractive and above 6 are additive.
 """
 import curses
 from .map_loader import Map
+
 from .player import Player
+from .player import Gun
+
 from .renderer import Renderer
 from .controller import Controller
 from .UI import UI

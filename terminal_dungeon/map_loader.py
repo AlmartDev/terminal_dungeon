@@ -65,6 +65,7 @@ class Item(Sprite):
         self.is_grabbed = False
 
     def on_pickup(self, player):
+        self.is_grabbed = True
         # Definetly not the final implementation, but it's a start and works
         # This logic here should be into a "game" class with all game logic (?)
         if self.tex == "healthpack":

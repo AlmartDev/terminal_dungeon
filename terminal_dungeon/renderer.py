@@ -215,20 +215,18 @@ class Renderer:
 
         for item in items:
             item.relative = player.pos - item.pos
-        items.sort()
 
         cam_inv = np.linalg.inv(-player.cam[::-1])
 
         for item in items:  # Draw each item from furthest to closest.
             if item.is_grabbed:
-                break
+                continue
 
             # Transformed position of sprites due to camera position
             x, y = item.relative @ cam_inv
             item_x = int(w / 2 * (1 + x / y))
 
-            if item.relative[0] < .5 and item.relative[1] < .5:
-                item.is_grabbed = True
+            if item.relative[0] < .35 and item.relative[1] < .35:
                 item.on_pickup(player)
 
             item_height = int(h / y / 4)    # Divided to make it smaller
@@ -276,22 +274,29 @@ class Renderer:
         self.buffer[r: -y_offset, c: -x_offset] = self.mini_map[y - hh: y + hh, x - hw: x + hw]
         self.buffer[r + hh, c + hw] = '@'
 
-    def draw_ui(self):        
+    def draw_ui(self):    
+        gun = self.player.gun
+        gun._load_texture()
+
         x_offset, y_offset = self.UI.pos
         width = int(self.UI.width * self.width)
         width += width % 2
 
-        hw = width // 2
         height = int(self.UI.height * self.height)
         height += height % 2
-        hh = height // 2  # half-height
 
         r = -height - y_offset
         c = -width - x_offset
 
-        for lines in range(self.UI.lines):
-            for char in range(len(self.UI._ui[lines])):
-                self.buffer[c + width + lines, r + height + char] = self.UI._ui[lines][char] 
+        # Gun is rendered before UI so UI is always at the top
+        for line in range(len(gun.texture)):
+            for char in range(len(gun.texture[line])):
+                if gun.texture[line][char] != "0":
+                    self.buffer[c + width - line + 4, r + height + char - 15] = gun.texture[line][char]
+
+        for line in range(self.UI.lines):
+            for char in range(len(self.UI._ui[line])):
+                self.buffer[c + width + line, r + height + char] = self.UI._ui[line][char] 
 
     def update(self):
         self.buffer[:, :] = " "  # Clear buffer

@@ -1,5 +1,9 @@
+from pathlib import Path
 import numpy as np
 from math import cos, sin
+
+ROOT = Path("terminal_dungeon")
+UI_DIR = ROOT / "UI"
 
 def rotation_matrix(theta):
     """
@@ -10,7 +14,6 @@ def rotation_matrix(theta):
 
     return np.array([[ r, q],
                      [-q, r]])
-
 
 class Player:
     """
@@ -32,6 +35,8 @@ class Player:
     def __init__(self, game_map, pos=np.array([5., 5.]), initial_angle=0):
         self.game_map = game_map
         self.pos = pos
+
+        self.gun = Gun("shotgun", 10, 1)
 
         self.hp = 100 # Health points
         self.ammo = 25 # Ammo
@@ -112,3 +117,16 @@ class Player:
 
         if self.ammo < 0:
             self.ammo = 0
+
+
+class Gun():
+    def __init__(self, tex, damage, time_between_shots):
+        self.tex = tex
+        self.damage = damage
+        self.time_between_shots = time_between_shots
+
+    def _load_texture(self):
+        # TODO: read all files named tex + (number) + "txt" to make an animation, if none just use tex + ".txt"
+
+        self.texture = (UI_DIR / (self.tex + ".txt")).read_text().splitlines()
+        self.texture.reverse()
