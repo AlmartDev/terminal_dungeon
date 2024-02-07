@@ -111,4 +111,6 @@ class Player:
     
     def shoot(self):
         self.ammo -= 1
-        # Do more here later
+        
+        if self.ammo < 0:
+            self.ammo = 0

@@ -1,5 +1,5 @@
 |                              |
 |   Player                     |                            
-|   HEALTH: 111     AMMO: 22   |
+|   HEALTH: 111     AMMO: 222  |
 |                              |
                               
