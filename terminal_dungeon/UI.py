@@ -14,7 +14,6 @@ class UI:
 
         self.lines = len(self._ui) 
         self.player = player
-
         # 000 is a placeholder for player's health
         # 111 is a placeholder for player's ammo
         # See ui.txt to see how the placeholders are used
@@ -23,17 +22,8 @@ class UI:
 
         # Replace placeholders with player's health and ammo
         for lines in range(self.lines):
-            if len(str(player.hp)) < 3:
-                self._ui[lines] = self._ui[lines].replace("000", "0" + str(player.hp))
-            elif len(str(player.hp)) < 2:
-                self._ui[lines] = self._ui[lines].replace("000", "00" + str(player.hp))
-            else:
-                self._ui[lines] = self._ui[lines].replace("000", str(player.hp))
-
-            if len(str(player.ammo)) < 2:
-                self._ui[lines] = self._ui[lines].replace("11", "0" + str(player.ammo))
-            else:
-                self._ui[lines] = self._ui[lines].replace("11", str(player.ammo))
+            self._ui[lines] = self._ui[lines].replace("111", str(player.hp))
+            self._ui[lines] = self._ui[lines].replace("22", str(player.ammo))
 
         self.pos = 5, -105
         self.width = .4
@@ -55,5 +45,5 @@ class UI:
 
         # Replace placeholders with player's health and ammo
         for lines in range(self.lines):
-            self._ui[lines] = self._ui[lines].replace("000", str(self.player.hp))
-            self._ui[lines] = self._ui[lines].replace("11", str(self.player.ammo))
+            self._ui[lines] = self._ui[lines].replace("111", str(self.player.hp))
+            self._ui[lines] = self._ui[lines].replace("22", str(self.player.ammo))

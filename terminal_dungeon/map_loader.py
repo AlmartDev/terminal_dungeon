@@ -38,7 +38,6 @@ class Map:
         # We often would convert key to a tuple with ints when indexing the map elsewhere, so we just moved that logic to here:
         return self._map[int(key[0]), int(key[1])]
 
-
 class Sprite:
     """Helper class to simplify working with sprites."""
     __slots__ = "pos", "tex", "relative"
@@ -55,15 +54,25 @@ class Sprite:
     def __lt__(self, other):
         # Sprites are sorted in reverse from their distance to player in the renderer.
         return self.distance > other.distance
-
-class Item:
+    
+class Item(Sprite):
     """Helper class to simplify working with items."""
-    __slots__ = "pos", "tex", "relative"
+    __slots__ = "pos", "tex", "relative", "is_grabbed"
 
     def __init__(self, pos, tex):
         self.pos = np.array(pos)
         self.tex = tex
         self.relative = np.array([0.0, 0.0])
+        self.is_grabbed = False
+
+    def on_pickup(self, player):
+        # Definetly not the final implementation, but it's a start and works
+        # This logic here should be into a "game" class with all game logic (?)
+        self.is_grabbed = True
+        if self.tex == "healthpack":
+            player.getHeal(25)
+        elif self.tex == "ammo":
+            player.getAmmo(10)
 
     @property
     def distance(self):
@@ -72,3 +81,4 @@ class Item:
     def __lt__(self, other):
         # Sprites are sorted in reverse from their distance to player in the renderer.
         return self.distance > other.distance
+    

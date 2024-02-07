@@ -82,6 +82,13 @@ class Player:
         if self.game_map[self.pos[0], next_step[1]] == 0:
             self.pos[1] = next_step[1]
 
+        if self.game_map[next_step[0], self.pos[1]] == 3:
+            self.pos[0] = next_step[0]
+
+        if self.game_map[self.pos[0], next_step[1]] == 3:
+            self.pos[1] = next_step[1]
+            
+
     #--------------------- Game mechanics ---------------------
     def getDamage(self, damage):
         self.hp -= damage
