@@ -221,15 +221,14 @@ class Renderer:
 
         for item in items:  # Draw each item from furthest to closest.
             if item.is_grabbed:
-                return
+                break
 
             # Transformed position of sprites due to camera position
             x, y = item.relative @ cam_inv
             item_x = int(w / 2 * (1 + x / y))
 
-            relative = player.pos - item.pos
-
-            if relative[0] < .5 and relative[1] < .5:
+            if item.relative[0] < .5 and item.relative[1] < .5:
+                item.is_grabbed = True
                 item.on_pickup(player)
 
             item_height = int(h / y / 4)    # Divided to make it smaller
@@ -305,7 +304,7 @@ class Renderer:
         self.cast_items()
         self.cast_sprites()
 
-        # update map
+        # updates UI textures from ./UI/ui.txt
         self.UI.update()
 
         self.draw_ui()

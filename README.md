@@ -18,6 +18,13 @@ This engine was used to power a maze solving robot during Advent of Code 2019:
 * **'wasdqe'** or arrow-keys to move
 
 * **'space'** to jump
+
+* **'f'** to Shoot
+
+* **'g'** take 14 hp
+
+* **'h'** heal 25 hp
+
 ***********
 Depending on your terminal font, Renderer.ascii_map may need to be adjusted.
 

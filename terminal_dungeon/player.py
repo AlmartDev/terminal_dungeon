@@ -105,12 +105,10 @@ class Player:
     def getAmmo(self, ammo):
         self.ammo += ammo
         if self.ammo > 50:
-            self.ammo = 50  # Max ammo is 50
-        elif self.ammo < 0:
-            self.ammo = 0
-    
+            self.ammo = 100  # Max ammo is 100
+            
     def shoot(self):
         self.ammo -= 1
-        
+
         if self.ammo < 0:
             self.ammo = 0

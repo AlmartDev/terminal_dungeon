@@ -57,7 +57,6 @@ class Sprite:
     
 class Item(Sprite):
     """Helper class to simplify working with items."""
-    __slots__ = "pos", "tex", "relative", "is_grabbed"
 
     def __init__(self, pos, tex):
         self.pos = np.array(pos)
@@ -68,7 +67,6 @@ class Item(Sprite):
     def on_pickup(self, player):
         # Definetly not the final implementation, but it's a start and works
         # This logic here should be into a "game" class with all game logic (?)
-        self.is_grabbed = True
         if self.tex == "healthpack":
             player.getHeal(25)
         elif self.tex == "ammo":
