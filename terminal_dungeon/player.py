@@ -87,7 +87,7 @@ class Player:
         if self.game_map[self.pos[0], next_step[1]] == 0:
             self.pos[1] = next_step[1]
 
-        if self.game_map[next_step[0], self.pos[1]] == 3:
+        if self.game_map[next_step[0], self.pos[1]] == 3:   # 3 = door
             self.pos[0] = next_step[0]
 
         if self.game_map[self.pos[0], next_step[1]] == 3:

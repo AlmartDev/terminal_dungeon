@@ -296,7 +296,7 @@ class Renderer:
 
         for line in range(self.UI.lines):
             for char in range(len(self.UI._ui[line])):
-                self.buffer[c + width + line, r + height + char] = self.UI._ui[line][char] 
+                self.buffer[c + width + line, r + height + char - 6] = self.UI._ui[line][char] 
 
     def update(self):
         self.buffer[:, :] = " "  # Clear buffer

@@ -38,7 +38,7 @@ def main(screen):
     player = Player(game_map)
     game_UI = UI(player)
 
-    wall_textures = "wall_1", "wall_2"
+    wall_textures = "wall_1", "wall_2", "wall_3" # wall 3 = door
     sprite_textures = "dragon", "tree"
     item_textures =  "healthpack", "ammo"
 
