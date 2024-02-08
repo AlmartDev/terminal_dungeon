@@ -65,6 +65,7 @@ class Renderer:
         self.width = w
         self.angle_increment = 1 / w
         self.floor_y = h // 2
+        self.cieling_y = -(h // 2)
         self.distances = np.zeros(w)
         self.buffer = np.full((h, w), " ")
             
@@ -275,6 +276,8 @@ class Renderer:
         self.buffer[r + hh, c + hw] = '@'
 
     def draw_ui(self):    
+        self.draw_minimap()
+
         gun = self.player.gun
         gun._load_texture()
 
@@ -303,6 +306,8 @@ class Renderer:
 
         self.buffer[self.floor_y:, ::2] = self.ascii_map[1]  # Draw floor
 
+        self.buffer[:self.cieling_y, ::3] = self.ascii_map[0]   # Draw cieling
+
         for column in range(self.width):  # Draw walls
             self.cast_ray(column)
 
@@ -312,8 +317,7 @@ class Renderer:
         # updates UI textures from ./UI/ui.txt
         self.UI.update()
 
-        self.draw_ui()
-        self.draw_minimap()
+        self.draw_ui()  # Gun, UI and minimap
 
         # Push buffer to screen
         for row_num, row in enumerate(self.buffer):

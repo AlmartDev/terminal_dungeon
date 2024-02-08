@@ -16,9 +16,9 @@ subtractive and above 6 are additive.
 """
 import curses
 from .map_loader import Map
+from .audio import Audio
 
 from .player import Player
-from .player import Gun
 
 from .renderer import Renderer
 from .controller import Controller
@@ -38,7 +38,7 @@ def main(screen):
     player = Player(game_map)
     game_UI = UI(player)
 
-    wall_textures = "wall_1", "wall_2", "wall_3" # wall 3 = door
+    wall_textures = "wall_1", "wall_2", "door" 
     sprite_textures = "dragon", "tree"
     item_textures =  "healthpack", "ammo"
 
