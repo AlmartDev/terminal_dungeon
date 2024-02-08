@@ -14,7 +14,6 @@ def rotation_matrix(theta):
 
     return np.array([[ r, q],
                      [-q, r]])
-
 class Player:
     """
     Player class with methods for moving and updating any effects on the
@@ -32,8 +31,9 @@ class Player:
     is_jumping = False
     z = 0.0  # "height" off the ground
 
-    def __init__(self, game_map, pos=np.array([5., 5.]), initial_angle=0):
+    def __init__(self, game_map, audio_system, pos=np.array([5., 5.]), initial_angle=0):
         self.game_map = game_map
+        self.audio = audio_system
         self.pos = pos
 
         self.gun = Gun("shotgun", 10, 1)
@@ -117,6 +117,8 @@ class Player:
 
         if self.ammo < 0:
             self.ammo = 0
+
+        self.audio.play_sound("shotgun.mp3")
 
 
 class Gun():

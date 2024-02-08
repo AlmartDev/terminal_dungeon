@@ -70,8 +70,11 @@ class Item(Sprite):
         # This logic here should be into a "game" class with all game logic (?)
         if self.tex == "healthpack":
             player.getHeal(25)
+            player.audio.play_sound("powerup1.wav")
         elif self.tex == "ammo":
             player.getAmmo(10)
+            player.audio.play_sound("powerup2.wav")
+
 
     @property
     def distance(self):

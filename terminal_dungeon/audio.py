@@ -1,16 +1,16 @@
-import playsound
+import vlc
 from pathlib import Path
 
 ROOT = Path("terminal_dungeon")
 AUDIO_DIR = ROOT / "audio"
 
-class Audio():
+class AudioPlayer:
     def __init__(self):
-        self.music = None
-        self.sound = None
+        self.instance = vlc.Instance('--input-repeat=-1', '--fullscreen')
+        self.player = self.instance.media_player_new()
 
     def play_sound(self, sound):
-        playsound.playsound(AUDIO_DIR / sound)
-
-    def stop_music(self):
-        playsound.playsound(None)
+        path = AUDIO_DIR / sound
+        media = self.instance.media_new(path)
+        self.player.set_media(media)
+        self.player.play()

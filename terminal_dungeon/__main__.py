@@ -16,7 +16,7 @@ subtractive and above 6 are additive.
 """
 import curses
 from .map_loader import Map
-from .audio import Audio
+from .audio import AudioPlayer
 
 from .player import Player
 
@@ -34,8 +34,10 @@ def init_curses(screen):
 def main(screen):
     init_curses(screen)
 
+    audio_system = AudioPlayer()
+
     game_map = Map("map_1")
-    player = Player(game_map)
+    player = Player(game_map, audio_system)
     game_UI = UI(player)
 
     wall_textures = "wall_1", "wall_2", "door" 
